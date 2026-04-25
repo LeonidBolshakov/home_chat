@@ -1,4 +1,5 @@
 from sqlmodel import SQLModel
+from datetime import datetime
 
 
 class UserCreate(SQLModel):
@@ -17,3 +18,20 @@ class RoomCreate(SQLModel):
 class RoomRead(SQLModel):
     id: int
     title: str
+
+
+class MessageCreate(SQLModel):
+    room_id: int
+    author_id: int
+
+    text: str | None = None
+
+
+class MessageRead(SQLModel):
+    id: int
+
+    room_id: int
+    author_id: int
+
+    text: str | None = None
+    created_at: datetime

@@ -2,7 +2,7 @@ from sqlmodel import select, Session
 from src.models import Room
 
 
-def get_room(room_id: int, session: Session) -> Room | None:
+def get_room_by_id(room_id: int, session: Session) -> Room | None:
     statemant = select(Room).where(Room.id == room_id)
     return session.exec(statemant).first()
 
