@@ -19,10 +19,12 @@ def create_message(
 
 
 def get_messages_by_room(room_id: int, session: Session) -> list[Message]:
-    statemant = select(Message).where(Message.room_id == room_id)
-    return list(session.exec(statemant).all())
+    statement = select(Message).where(Message.room_id == room_id)
+    return sorted(
+        list(session.exec(statement).all()), key=lambda m: m.created_at, reverse=True
+    )
 
 
 def get_messages(session: Session) -> list[Message]:
-    statemant = select(Message)
-    return list(session.exec(statemant).all())
+    statement = select(Message)
+    return list(session.exec(statement).all())

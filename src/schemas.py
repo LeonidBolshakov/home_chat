@@ -35,3 +35,15 @@ class MessageRead(SQLModel):
 
     text: str | None = None
     created_at: datetime
+
+
+class RoomUserCreate(SQLModel):
+    room_id: int
+    user_id: int
+
+
+class RoomUserRead(SQLModel):
+    id: int
+
+    room_id: int
+    user_id: int

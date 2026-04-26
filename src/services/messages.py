@@ -3,7 +3,7 @@ from src.models import Message
 from src.schemas import MessageCreate
 from src.crud.users import get_user_by_id
 from src.crud.rooms import get_room_by_id
-from src.crud.messages import create_message, get_messages
+from src.crud.messages import create_message, get_messages, get_messages_by_room
 
 from src.errors import UserNotFoundError, RoomNotFoundError
 
@@ -34,3 +34,9 @@ def save_message(message: Message, session: Session):
 
 def get_messages_service(session: Session) -> list[Message]:
     return get_messages(session)
+
+
+def get_messages_by_room_service(room_id: int, session: Session) -> list[Message]:
+    if get_room_by_id(room_id, session) is None:
+        raise RoomNotFoundError(room_id)
+    return get_messages_by_room(room_id, session)
