@@ -52,10 +52,10 @@ def delete_room_user_service(room_id: int, user_id: int, session: Session) -> st
         raise RoomUserNotFoundError(room_id, user_id)
 
     delete_room_user(room_id, user_id, session)
+    session.commit()
     if get_room_user_by_room_id_and_user_id(room_id, user_id, session) is not None:
         raise RoomUserNotDeletedError(room_id, user_id)
 
-    session.commit()
     return f"Из комнаты с ID {room_id} удалён пользователь с ID {user_id}"
 
 

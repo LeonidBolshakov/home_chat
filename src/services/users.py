@@ -1,14 +1,12 @@
 from sqlmodel import Session
 
 from src.schemas import UserCreate
-from src.models import User, Room
-from src.errors import UserAlreadyExistsError, UserNotFoundError
+from src.models import User
+from src.errors import UserAlreadyExistsError
 from src.crud.users import (
     get_users,
     create_user,
     get_user_by_name,
-    get_rooms_by_user,
-    get_user_by_id,
 )
 
 
@@ -22,13 +20,6 @@ def create_user_service(user_in: UserCreate, session: Session) -> User:
         raise UserAlreadyExistsError(user_in.name)
     user = create_user(user_in.name, session)
     return save_user(user, session)
-
-
-def get_rooms_by_user_service(user_id: int, session: Session) -> list[Room]:
-    if get_user_by_id(user_id, session) is None:
-        raise UserNotFoundError(user_id)
-
-    return get_rooms_by_user(user_id, session)
 
 
 def save_user(user: User, session: Session) -> User:
