@@ -13,7 +13,9 @@ def get_room_user_by_room_id_and_user_id(
     statement = select(RoomUser).where(
         (RoomUser.room_id == room_id) & (RoomUser.user_id == user_id)  # type: ignore[arg-type]
     )
-    return session.exec(statement).first()
+    t = session.exec(statement).first()
+    print(t)
+    return t
 
 
 def get_rooms_users(session: Session) -> list[RoomUser]:
@@ -21,7 +23,14 @@ def get_rooms_users(session: Session) -> list[RoomUser]:
     return list(session.exec(statement).all())
 
 
-def delete_room_user(room_id: int, user_id: int, session: Session) -> None:
+def delete_users_from_room(room_id: int, session: Session) -> None:
+    statement = delete(RoomUser).where(
+        RoomUser.room_id == room_id  # type: ignore[arg-type]
+    )
+    session.exec(statement)
+
+
+def delete_user_from_room(room_id: int, user_id: int, session: Session) -> None:
     statement = delete(RoomUser).where(
         (RoomUser.room_id == room_id) & (RoomUser.user_id == user_id)  # type: ignore[arg-type]
     )

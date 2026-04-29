@@ -1,5 +1,4 @@
-from sqlmodel import select, Session
-from sqlalchemy import exists, and_
+from sqlmodel import select, Session, delete
 
 from src.models import Room, RoomUser, User
 
@@ -26,7 +25,13 @@ def get_rooms(session: Session) -> list[Room]:
 def get_users_by_room(room_id: int, session: Session) -> list[User]:
     statement = (
         select(User)
-        .join(RoomUser, RoomUser.user_id == User.id)
-        .where(RoomUser.room_id == room_id)
+        .join(RoomUser, RoomUser.user_id == User.id)  # type: ignore[arg-type]
+        .where(RoomUser.room_id == room_id)  # type: ignore[arg-type]
+        .distinct()
     )
     return list(session.exec(statement).all())
+
+
+def delete_room(room_id: int, session: Session) -> None:
+    statement = delete(Room).where(Room.id == room_id)  # type: ignore[arg-type]
+    session.exec(statement)

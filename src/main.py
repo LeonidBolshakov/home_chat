@@ -11,7 +11,6 @@ from src.errors import (
     RoomUserAlreadyExistsError,
     UserNotFoundError,
     RoomNotFoundError,
-    RoomUserNotDeletedError,
     RoomUserNotFoundError,
 )
 
@@ -55,18 +54,16 @@ def room_does_not_exist_exception_handler(
     )
 
 
-@app.exception_handler(RoomUserNotDeletedError)
-def room_user_not_deleted_error(
-    request: Request, exc: RoomUserNotDeletedError
-) -> JSONResponse:
-    return JSONResponse(status_code=409, content={"detail": str(exc)})
-
-
 @app.exception_handler(RoomUserNotFoundError)
 def room_user_not_found_error(
     request: Request, exc: RoomUserNotFoundError
 ) -> JSONResponse:
     return JSONResponse(status_code=404, content={"detail": str(exc)})
+
+
+@app.exception_handler(ValueError)
+def value_error_exception_handler(request: Request, exc: ValueError) -> JSONResponse:
+    return JSONResponse(status_code=400, content={"detail": str(exc)})
 
 
 app.include_router(users_router)

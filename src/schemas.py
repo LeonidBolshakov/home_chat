@@ -1,5 +1,7 @@
 from sqlmodel import SQLModel
 from datetime import datetime
+from pydantic import BaseModel, Field
+from typing import Literal
 
 
 class UserCreate(SQLModel):
@@ -47,3 +49,17 @@ class RoomUserRead(SQLModel):
 
     room_id: int
     user_id: int
+
+
+class MessagePage(SQLModel):
+    items: list[MessageRead]
+    total: int
+
+
+class PaginationParams(BaseModel):
+    limit: int = Field(50, ge=1, le=100)
+    offset: int = Field(0, ge=0)
+
+
+class SortParams(SQLModel):
+    order: Literal["asc", "desc"] = "desc"

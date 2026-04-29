@@ -6,7 +6,8 @@ from src.crud.room_user import (
     create_room_user,
     get_rooms_users,
     get_room_user_by_room_id_and_user_id,
-    delete_room_user,
+    delete_users_from_room,
+    delete_user_from_room,
 )
 from src.crud.rooms import get_room_by_id
 from src.crud.users import get_user_by_id
@@ -15,7 +16,6 @@ from src.errors import (
     RoomNotFoundError,
     UserNotFoundError,
     RoomUserNotFoundError,
-    RoomUserNotDeletedError,
 )
 
 
@@ -51,12 +51,14 @@ def delete_room_user_service(room_id: int, user_id: int, session: Session) -> st
     if get_room_user_by_room_id_and_user_id(room_id, user_id, session) is None:
         raise RoomUserNotFoundError(room_id, user_id)
 
-    delete_room_user(room_id, user_id, session)
-    session.commit()
-    if get_room_user_by_room_id_and_user_id(room_id, user_id, session) is not None:
-        raise RoomUserNotDeletedError(room_id, user_id)
+    delete_user_from_room(room_id, user_id, session)
 
+    session.commit()
     return f"Из комнаты с ID {room_id} удалён пользователь с ID {user_id}"
+
+
+def delete_users_from_room_service(room_id: int, session: Session) -> None:
+    delete_users_from_room(room_id, session)
 
 
 def save_room_user(room_user: RoomUser, session: Session) -> RoomUser:

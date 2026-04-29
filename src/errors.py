@@ -32,12 +32,3 @@ class RoomUserNotFoundError(Exception):
         super().__init__(
             f"Пользователь с ID {self.user_id} не находится в комнате с ID {self.room_id}"
         )
-
-
-class RoomUserNotDeletedError(Exception):
-    def __init__(self, room_id: int, user_id: int) -> None:
-        self.room_id = room_id
-        self.user_id = user_id
-        super().__init__(
-            f"Из комнаты с ID {room_id} не удалось удалить пользовыателя с ID {user_id}"
-        )
