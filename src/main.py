@@ -12,6 +12,8 @@ from src.errors import (
     UserNotFoundError,
     RoomNotFoundError,
     RoomUserNotFoundError,
+    InvalidCredentialsError,
+    AccessDeniedError,
 )
 
 app = FastAPI(lifespan=lifespan)
@@ -64,6 +66,21 @@ def room_user_not_found_error(
 @app.exception_handler(ValueError)
 def value_error_exception_handler(request: Request, exc: ValueError) -> JSONResponse:
     return JSONResponse(status_code=400, content={"detail": str(exc)})
+
+
+@app.exception_handler(InvalidCredentialsError)
+def invalid_credentials_handler(
+    request: Request, exc: InvalidCredentialsError
+) -> JSONResponse:
+    return JSONResponse(
+        status_code=401,
+        content={"detail": "Invalid credentials"},
+    )
+
+
+@app.exception_handler(AccessDeniedError)
+def access_denied_handler(request: Request, exc: AccessDeniedError) -> JSONResponse:
+    return JSONResponse(status_code=403, content={"detail": "Не хватает прав доступа"})
 
 
 app.include_router(users_router)

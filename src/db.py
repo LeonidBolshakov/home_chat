@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from sqlmodel import create_engine, Session, SQLModel
 from contextlib import asynccontextmanager
 
-DATABASE_URL = "sqlite:///db_home_chat.db"
+DATABASE_URL = "sqlite:///C:/1_python_web/home_chat/db_home_chat.db"
 engine = create_engine(DATABASE_URL)
 
 

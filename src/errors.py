@@ -32,3 +32,11 @@ class RoomUserNotFoundError(Exception):
         super().__init__(
             f"Пользователь с ID {self.user_id} не находится в комнате с ID {self.room_id}"
         )
+
+
+class InvalidCredentialsError(Exception):
+    pass
+
+
+class AccessDeniedError(Exception):
+    pass

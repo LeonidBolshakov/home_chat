@@ -18,8 +18,8 @@ def get_user_by_name(name: str, session: Session) -> User | None:
     return session.exec(statement).first()
 
 
-def create_user(name: str, session: Session) -> User:
-    return User(name=name)
+def create_user(name: str, hashed_password: str, session: Session) -> User:
+    return User(name=name, hashed_password=hashed_password)
 
 
 def get_rooms_by_user_old(user_id: int, session: Session) -> list[Room]:

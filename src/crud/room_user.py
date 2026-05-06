@@ -13,9 +13,7 @@ def get_room_user_by_room_id_and_user_id(
     statement = select(RoomUser).where(
         (RoomUser.room_id == room_id) & (RoomUser.user_id == user_id)  # type: ignore[arg-type]
     )
-    t = session.exec(statement).first()
-    print(t)
-    return t
+    return session.exec(statement).first()
 
 
 def get_rooms_users(session: Session) -> list[RoomUser]:

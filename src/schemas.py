@@ -6,6 +6,7 @@ from typing import Literal
 
 class UserCreate(SQLModel):
     name: str
+    password: str
 
 
 class UserRead(SQLModel):
@@ -24,9 +25,7 @@ class RoomRead(SQLModel):
 
 class MessageCreate(SQLModel):
     room_id: int
-    author_id: int
-
-    text: str | None = None
+    text: str
 
 
 class MessageRead(SQLModel):
@@ -63,3 +62,22 @@ class PaginationParams(BaseModel):
 
 class SortParams(SQLModel):
     order: Literal["asc", "desc"] = "desc"
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "breader"
+
+
+class UserRegister(SQLModel):
+    name: str
+    password: str
+
+
+class UserLogin(SQLModel):
+    name: str
+    password: str
+
+
+class MessageUpdate(SQLModel):
+    text: str
