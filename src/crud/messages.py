@@ -63,8 +63,8 @@ def get_messages_page_with_total(
     return messages, total_count
 
 
-def get_messages(session: Session) -> list[Message]:
-    statement = select(Message)
+def get_messages(user_id: int, session: Session) -> list[Message]:
+    statement = select(Message).where(Message.author_id == user_id)
     return list(session.exec(statement).all())
 
 

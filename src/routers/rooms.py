@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends
+from sqlmodel import Session
 
 from src.models import Room
 from src.schemas import (
@@ -8,12 +9,15 @@ from src.schemas import (
     PaginationParams,
     SortParams,
     MessagePage,
+    RoomUpdate,
 )
 from src.services.rooms import (
     get_rooms_services,
     create_room_services,
     get_users_by_room_service,
     delete_room_service,
+    get_room_service,
+    update_room_service,
 )
 from src.services.messages import get_messages_page_by_room_for_user_service
 from src.db import get_session
@@ -23,12 +27,19 @@ router = APIRouter(prefix="/rooms", tags=["rooms"])
 
 
 @router.get("", response_model=list[RoomRead])
-def get_rooms_endpoint(session=Depends(get_session)) -> list[Room]:
-    return get_rooms_services(session)
+def get_rooms_endpoint(
+    user_id: int = Depends(get_current_user_id),
+    session: Session = Depends(get_session),
+) -> list[Room]:
+    return get_rooms_services(user_id, session)
 
 
 @router.post("", response_model=RoomRead)
-def create_room_endpoint(room: RoomCreate, session=Depends(get_session)) -> Room:
+def create_room_endpoint(
+    room: RoomCreate,
+    user_id: int = Depends(get_current_user_id),
+    session: Session = Depends(get_session),
+) -> Room:
     return create_room_services(room, session)
 
 
@@ -36,7 +47,7 @@ def create_room_endpoint(room: RoomCreate, session=Depends(get_session)) -> Room
 def get_users_by_room_endpoint(
     room_id: int,
     user_id: int = Depends(get_current_user_id),
-    session=Depends(get_session),
+    session: Session = Depends(get_session),
 ):
     return get_users_by_room_service(room_id, user_id, session)
 
@@ -47,7 +58,7 @@ def get_messages_page_by_room_endpoint(
     user_id: int = Depends(get_current_user_id),
     pagination: PaginationParams = Depends(),
     sort_params: SortParams = Depends(),
-    session=Depends(get_session),
+    session: Session = Depends(get_session),
 ):
     return get_messages_page_by_room_for_user_service(
         room_id,
@@ -60,5 +71,28 @@ def get_messages_page_by_room_endpoint(
 
 
 @router.delete("/{room_id}", response_model=str)
-def delete_room_endpoint(room_id: int, session=Depends(get_session)):
-    return delete_room_service(room_id, session=session)
+def delete_room_endpoint(
+    room_id: int,
+    user_id: int = Depends(get_current_user_id),
+    session: Session = Depends(get_session),
+):
+    return delete_room_service(room_id, user_id, session=session)
+
+
+@router.get("/{room_id}", response_model=RoomRead)
+def get_room_endpoint(
+    room_id: int,
+    user_id: int = Depends(get_current_user_id),
+    session: Session = Depends(get_session),
+) -> Room:
+    return get_room_service(room_id, user_id, session=session)
+
+
+@router.patch("/{room_id}", response_model=RoomRead)
+def update_room_endpoint(
+    room_id: int,
+    room_in: RoomUpdate,
+    user_id: int = Depends(get_current_user_id),
+    session: Session = Depends(get_session),
+):
+    return update_room_service(room_id, room_in, user_id, session=session)

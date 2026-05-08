@@ -3,7 +3,6 @@ from sqlmodel import Session
 
 from src.schemas import (
     UserRead,
-    UserCreate,
     TokenResponse,
     UserRegister,
     UserLogin,
@@ -17,7 +16,6 @@ from src.auth import get_current_user_id
 from src.services.messages import get_me_messages_service
 from src.services.users import (
     get_users_service,
-    create_user_service,
     logout_service,
     login_service,
     register_service,
@@ -28,13 +26,10 @@ router = APIRouter(prefix="/users", tags=["users"])
 
 
 @router.get("", response_model=list[UserRead])
-def get_users_endpoint(session=Depends(get_session)) -> list[User]:
+def get_users_endpoint(
+    user_id: int = Depends(get_current_user_id), session=Depends(get_session)
+) -> list[User]:
     return get_users_service(session)
-
-
-@router.post("", response_model=UserRead)
-def create_user_endpoint(user: UserCreate, session=Depends(get_session)) -> User:
-    return create_user_service(user, session)
 
 
 @router.post("/login", response_model=TokenResponse)

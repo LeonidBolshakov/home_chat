@@ -17,8 +17,12 @@ def create_room(title: str, session: Session) -> Room:
     return Room(title=title)
 
 
-def get_rooms(session: Session) -> list[Room]:
-    statement = select(Room)
+def get_rooms(user_id: int, session: Session) -> list[Room]:
+    statement = (
+        select(Room)
+        .join(RoomUser)
+        .where((RoomUser.user_id == user_id) & (RoomUser.room_id == Room.id))
+    )
     return list(session.exec(statement).all())
 
 

@@ -20,8 +20,10 @@ router = APIRouter(prefix="/messages", tags=["messages"])
 
 
 @router.get("", response_model=list[MessageRead])
-def get_messages_endpoint(session=Depends(get_session)) -> list[Message]:
-    return get_messages_service(session)
+def get_messages_endpoint(
+    user_id: int = Depends(get_current_user_id), session=Depends(get_session)
+) -> list[Message]:
+    return get_messages_service(user_id, session)
 
 
 @router.post("", response_model=MessageRead)

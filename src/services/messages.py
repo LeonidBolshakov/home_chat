@@ -4,7 +4,7 @@ from sqlmodel import Session, asc, desc
 from src.errors import AccessDeniedError
 from src.models import Message
 from src.schemas import MessageCreate, MessagePage
-from src.crud.room_user import get_room_user_by_room_id_and_user_id
+from src.crud.room_user import is_user_in_room
 from src.crud.messages import (
     create_message,
     get_messages,
@@ -35,8 +35,8 @@ def save_message(message: Message, session: Session):
     return message
 
 
-def get_messages_service(session: Session) -> list[Message]:
-    return get_messages(session)
+def get_messages_service(user_id: int, session: Session) -> list[Message]:
+    return get_messages(user_id, session)
 
 
 def get_messages_page_by_room_for_user_service(
@@ -109,12 +109,6 @@ def get_me_messages_service(
         user_id, limit, offset, order, session
     )
     return MessagePage(items=items, total=total)
-
-
-def is_user_in_room(room_id: int, user_id: int, session: Session) -> bool:
-    if get_room_user_by_room_id_and_user_id(room_id, user_id, session) is None:
-        return False
-    return True
 
 
 def get_sorting_direction(sorting_direction: str) -> Callable:

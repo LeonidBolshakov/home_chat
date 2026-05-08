@@ -81,3 +81,7 @@ class UserLogin(SQLModel):
 
 class MessageUpdate(SQLModel):
     text: str
+
+
+class RoomUpdate(SQLModel):
+    title: str
