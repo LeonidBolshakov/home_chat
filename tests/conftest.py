@@ -1,7 +1,25 @@
 from fastapi.testclient import TestClient
 from uuid import uuid4
+from sqlmodel import create_engine, SQLModel, Session
 
+from src.db import get_session
 from src.main import app
+
+TEST_DATABASE_URL = "sqlite:///./test.db"
+
+test_engine = create_engine(
+    TEST_DATABASE_URL,
+    connect_args={"check_same_thread": False},
+)
+SQLModel.metadata.create_all(test_engine)
+
+
+def get_test_sessin():
+    with Session(test_engine) as session:
+        yield session
+
+
+app.dependency_overrides[get_session] = get_test_sessin
 
 client = TestClient(app)
 
