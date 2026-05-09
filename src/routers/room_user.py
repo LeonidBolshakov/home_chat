@@ -1,5 +1,3 @@
-from urllib import response
-
 from fastapi import APIRouter, Depends
 
 from src.models import RoomUser
