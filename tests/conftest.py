@@ -1,3 +1,5 @@
+import pytest
+
 from fastapi.testclient import TestClient
 from uuid import uuid4
 from sqlmodel import create_engine, SQLModel, Session
@@ -11,7 +13,13 @@ test_engine = create_engine(
     TEST_DATABASE_URL,
     connect_args={"check_same_thread": False},
 )
-SQLModel.metadata.create_all(test_engine)
+
+
+@pytest.fixture(autouse=True)
+def clear_db():
+    SQLModel.metadata.drop_all(test_engine)
+    SQLModel.metadata.create_all(test_engine)
+    yield
 
 
 def get_test_sessin():
