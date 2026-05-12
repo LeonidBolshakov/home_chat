@@ -6,6 +6,7 @@ from src.routers.users import router as users_router
 from src.routers.rooms import router as rooms_router
 from src.routers.messages import router as messages_router
 from src.routers.room_user import router as room_user_router
+from src.routers.websocket import router as websocket_router
 from src.errors import (
     UserAlreadyExistsError,
     RoomUserAlreadyExistsError,
@@ -87,3 +88,4 @@ app.include_router(users_router)
 app.include_router(rooms_router)
 app.include_router(messages_router)
 app.include_router(room_user_router)
+app.include_router(websocket_router)
